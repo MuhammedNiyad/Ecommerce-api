@@ -23,7 +23,11 @@ const orderSchema = new mongoose.Schema({
         required: true,
     },
     address: {
-        type:Object
+        type:Object,
+        required: true
+    },
+    status: {
+        type: String, default: "pending"
     }
 }, {timestamps: true});
 

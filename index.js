@@ -6,7 +6,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 app.use(express.json())
 
-app.use("/api", require("./routes/user.router"));
+app.use("/api/user", require("./routes/user.router"));
+app.use("/api/user", require("./routes/auth"));
 
 
 
