@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken, verifyTokenAndAuthorization } = require("./verifyToken");
+const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
 const User = require("../models/User.model");
 
+/* PUT */
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     console.log("in up usser")
     if (req.body.password) {
@@ -19,6 +20,42 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     };
 });
 
+/* DELETE */
+router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.status(200).json("User has been deleted...!")
+    } catch (error) {
+        res.status(500).json(error)
+    }
+});
 
+/* GET USER */
+router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        const { password, ...others } = user._doc;
+        console.log(others);
+        res.status(200).json(others);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+/* GET ALL USER */
+router.get('/', verifyTokenAndAdmin, async (req, res) => {
+    try {
+        const users = await User.find();
+        console.log(users);
+         const others = users.map((user)=> {
+            const { password, ...rest } = user._doc;
+            // console.log(others);
+            return rest;
+        } )
+        res.status(200).json(others);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
 
 module.exports = router;
