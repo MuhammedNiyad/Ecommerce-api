@@ -44,8 +44,10 @@ router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
 
 /* GET ALL USER */
 router.get('/', verifyTokenAndAdmin, async (req, res) => {
+    const query = req.query.new;
     try {
-        const users = await User.find();
+        //query for find latest logged user..!
+        const users = query? await User.find().limit(5) : await User.find();
         console.log(users);
          const others = users.map((user)=> {
             const { password, ...rest } = user._doc;
