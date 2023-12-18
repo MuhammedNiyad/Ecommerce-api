@@ -3,7 +3,7 @@ const router = express.Router();
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
 const User = require("../models/User.model");
 
-/* PUT */
+/* PUT USER UPDATE */
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     console.log("in up usser")
     if (req.body.password) {

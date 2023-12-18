@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const Product = require("./models/Product.model");
 
 dotenv.config();
 app.use(express.json())
 
 app.use("/api/user", require("./routes/user.router"));
 app.use("/api/user", require("./routes/auth"));
+app.use("/api/products", require("./routes/product.router"));
 
 
 
