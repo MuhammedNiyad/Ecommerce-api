@@ -72,31 +72,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// /* GET USER STATS*/     /* stats means return total number of users per month and we can controll that..! */
-// router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
-//     const date = new Date();
-//     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
-//     try {
-//         const data = await User.aggregate([
-//             {$match: {createdAt: {$gte:lastYear}}},
-//             {
-//                 $project:{
-//                     month: {$month : "$createdAt"}
-//                 },
-//             },
-//             {
-//                 $group: {
-//                     _id:{start: '$month'},
-//                     total: {$sum: 1 },
-//                 }
-//             }
-//         ]);
-//         res.status(200).json(data)
-//     } catch (error) {
-//         res.status(500).json(error)
-//     }
-// })
 
 
 module.exports = router;
