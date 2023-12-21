@@ -5,7 +5,6 @@ const User = require("../models/User.model");
 
 /* PUT USER UPDATE */
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-    console.log("in up usser")
     if (req.body.password) {
         req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC);
     }
@@ -60,7 +59,7 @@ router.get('/', verifyTokenAndAdmin, async (req, res) => {
     }
 });
 
-/* GET USER STATS*/     /* stats means return total number of users per month and we can controll that..! */
+/* GET USER STATS*/     /* stats means return total number of users in per month and we can controll that..! */
 router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
@@ -75,7 +74,7 @@ router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
             },
             {
                 $group: {
-                    _id:{start: '$month'},
+                    _id: '$month',
                     total: {$sum: 1 },
                 }
             }
