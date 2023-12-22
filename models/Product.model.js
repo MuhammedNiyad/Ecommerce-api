@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
     categories: {
         type: Array
     },
-    size: {
+    pages: {
         type: String,
     },
     color: {
@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required:true,
     },
+    quantity: {
+        type: Number,
+        required: true,
+    }
 }, {timestamps: true});
 
 

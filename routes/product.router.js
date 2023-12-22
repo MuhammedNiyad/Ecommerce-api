@@ -53,8 +53,8 @@ router.get('/find/:id', async (req, res) => {
 
 /* GET ALL PRODUCTS */
 router.get('/', async (req, res) => {
-    const queryNew = req.query.new;
-    const queryCategory = req.query.category;
+    const queryNew = req.query.new;  // This is for if wanna get new products  add this to url (?new:true)
+    const queryCategory = req.query.category; //Rhis is for if you wanna get category based products add this to url (?category: example)
     try {
         let products;
         if(queryNew){

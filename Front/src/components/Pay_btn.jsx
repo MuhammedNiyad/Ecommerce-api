@@ -6,6 +6,9 @@ export default function Pay_btn({product}) {
         try {
             const res = await axios.post('http://localhost:5000/api/checkout/payment',product)
             console.log(res.data);
+            if(res.data.url) {
+                window.location.href = res.data.url;
+            }
         } catch (error) {
             console.log(error.message);
         }
