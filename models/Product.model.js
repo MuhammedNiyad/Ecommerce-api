@@ -7,6 +7,10 @@ const productSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    author: {
+        type: String,
+        required: true,
+    },
     desc: {
         type: String,
         required:true,
@@ -19,9 +23,6 @@ const productSchema = new mongoose.Schema({
         type: Array
     },
     pages: {
-        type: String,
-    },
-    color: {
         type: String,
     },
     price: {

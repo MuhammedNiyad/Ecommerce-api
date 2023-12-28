@@ -2,12 +2,52 @@ const express = require("express");
 const router = express.Router();
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
 const Product = require('../models/Product.model');
+const path = require('path');
+const multer = require('multer');
+
+// const storage = multer.diskStorage({
+//     destination: (req, file, callBack) => {
+//         callBack(null, '/Upload/productImg')
+//     },
+
+//     filename: (req, file, callBack) => {
+//         console.log(file);
+//         callBack(null, Date.now() + path.extname(file.originalname))
+//     }
+// });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'Upload/productImg')
+    },
+
+    filename: (req, file, cb) => {
+        console.log(file);
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+
+const uploadImg = multer({ storage: storage });
+
 
 // CREATE
 
-router.post("/", verifyTokenAndAdmin, async (req, res) => {
-    const newProduct = new Product(req.body)
+router.post("/", verifyTokenAndAdmin, uploadImg.single('image'), async (req, res) => {
+    console.log("file :", req.file);
+    console.log("file :", req.body);
+
     try {
+
+        const newProduct = new Product({
+            title: req.body.title,
+            author: req.body.author,
+            desc: req.body.desc,
+            img: req.file.path,
+            categories: req.body.categories,
+            pages: req.body.pages,
+            price: req.body.price,
+            quantity: req.body.quantity,
+        });
+
         const saveProduct = await newProduct.save();
         res.status(200).json(saveProduct);
     } catch (error) {
