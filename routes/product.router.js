@@ -41,7 +41,7 @@ router.post("/", verifyTokenAndAdmin, uploadImg.single('image'), async (req, res
             title: req.body.title,
             author: req.body.author,
             desc: req.body.desc,
-            img: req.file.path,
+            img: req.file.filename,
             categories: req.body.categories,
             pages: req.body.pages,
             price: req.body.price,
@@ -57,11 +57,18 @@ router.post("/", verifyTokenAndAdmin, uploadImg.single('image'), async (req, res
 
 
 /* PUT PRODUCT UPDATE */
-router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.put("/:id", verifyTokenAndAdmin, uploadImg.single('image'), async (req, res) => {
     try {
+        const update = req.file ? {
+            ...req.body,
+            img: req.file.filename
+        } : {
+            ...req.body,
+        }
+
         const updatedProduct = await Product.findByIdAndUpdate(req.params.id, 
             {
-            $set: req.body
+                $set: update
             },
         { new: true }
         );
@@ -84,9 +91,11 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 /* GET PRODUCT */
 router.get('/find/:id', async (req, res) => {
     try {
+        console.log(req.params.id);
         const product = await Product.findById(req.params.id);
         res.status(200).json(product);
     } catch (error) {
+        console.log(error);
         res.status(500).json(error);
     }
 });
@@ -94,7 +103,8 @@ router.get('/find/:id', async (req, res) => {
 /* GET ALL PRODUCTS */
 router.get('/', async (req, res) => {
     const queryNew = req.query.new;  // This is for if wanna get new products  add this to url (?new:true)
-    const queryCategory = req.query.category; //Rhis is for if you wanna get category based products add this to url (?category: example)
+    const queryCategory = req.query.category; //This is for if you wanna get category based products add this to url (?category: example)
+    console.log(queryCategory);
     try {
         let products;
         if(queryNew){
@@ -110,6 +120,16 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json(error);
     }
+});
+
+
+// GET IMAGE.....
+router.get(`/images/:imageName`, (req, res) => {
+    const imageName = req.params.imageName; // Retrieve the image name from the URL parameter
+    const imagesFolder = path.join(__dirname, "../Upload", "productImg"); // Define the folder where images are stored
+    const imagePath = path.join(imagesFolder, imageName); // Construct the full image path
+
+    res.sendFile(imagePath); // Send the image file as a response
 });
 
 
