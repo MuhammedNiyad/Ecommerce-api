@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     },
 
     filename: (req, file, cb) => {
-        console.log(file);
+        // console.log(file);
         cb(null, Date.now() + path.extname(file.originalname))
     }
 });
@@ -32,8 +32,8 @@ const uploadImg = multer({ storage: storage });
 // CREATE
 
 router.post("/", verifyTokenAndAdmin, uploadImg.single('image'), async (req, res) => {
-    console.log("file :", req.file);
-    console.log("file :", req.body);
+    // console.log("file :", req.file);
+    // console.log("file :", req.body);
 
     try {
 
@@ -91,7 +91,7 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 /* GET PRODUCT */
 router.get('/find/:id', async (req, res) => {
     try {
-        console.log(req.params.id);
+        // console.log(req.params.id);
         const product = await Product.findById(req.params.id);
         res.status(200).json(product);
     } catch (error) {

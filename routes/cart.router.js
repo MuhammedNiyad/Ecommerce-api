@@ -6,7 +6,10 @@ const Cart = require("../models/Cart.model")
 // CREATE
 
 router.post("/", verifyToken, async (req, res) => {
-    const newCart = new Cart(req.body)
+
+    console.log("user:", req.user);
+    const newCart = new Cart({ ...req.body, userId: req.user.id })
+    console.log(newCart);
     try {
         const saveCart = await newCart.save();
         res.status(200).json(saveCart);
