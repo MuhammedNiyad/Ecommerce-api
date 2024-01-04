@@ -20,8 +20,9 @@ const verifyToken = (req, res, next)=> {
 const verifyTokenAndAuthorization = (req, res, next) => {
     
     verifyToken(req, res, (user) => {
-        console.log("step 2");
+        // console.log("step 2");
         if (req.user.id === req.params.id || req.user.isAdmin) {
+            
             next();
         } else {
             res.status(403).json("You are not alowed to do that!");

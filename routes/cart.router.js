@@ -98,9 +98,22 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 /* DELETE */
 router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
     try {
-        await Cart.findByIdAndDelete(req.params.id);
-        res.status(200).json("Cart has been deleted...!")
+        const cart = new Cart.findOne({userId: req.user.id});
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+        const productId = req.params.id;
+                // Using $pull to remove the product with a specific productId from the products array
+                cart.products = cart.products.filter(product => product.productId !== productId);
+    
+        // console.log(req.params.id);
+        // await Cart.findByIdAndDelete({products:[req.params.id]});
+        await cart.save();
+
+        res.status(200).json("product has been deleted...!")
     } catch (error) {
+        console.log(error);
         res.status(500).json(error)
     }
 });
@@ -108,9 +121,9 @@ router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
 /* GET USER CART */
 router.get('/userCart', verifyTokenAndAuthorization, async (req, res,) => {
     try {
-        console.log( 'user-id : ',req.user.id);
-        const cart = await Cart.find({userId : req.user.id});
-        console.log( 'userCart : ',cart);
+        // console.log( 'user-id : ',req.user.id);
+        const cart = await Cart.findOne({ userId: req.user.id });
+        // console.log( 'userCart : ',cart);
         res.status(200).json(cart);
     } catch (error) {
         res.status(500).json(error);
