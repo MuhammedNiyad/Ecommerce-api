@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
-const Cart = require("../models/Cart.model")
+const Cart = require("../models/Cart.model");
+const Product = require("../models/Product.model");
 
 // CREATE
 
@@ -55,9 +56,11 @@ router.post("/", verifyToken, async (req, res) => {
     try {
         let cart = await Cart.findOne({ userId: req.user.id });
 
+        const {price} = await Product.findById(productId);
+
         if (!cart) {
             // If the user doesn't have a cart, create a new one
-            cart = new Cart({ userId: req.user.id, products: [{ productId, quantity }] });
+            cart = new Cart({ userId: req.user.id, products: [{ productId, quantity, totalPrice:price }] });
         } else {
             const existingProductIndex = cart.products.findIndex(product => product.productId === productId);
 
@@ -65,11 +68,15 @@ router.post("/", verifyToken, async (req, res) => {
                 // If the product already exists in the cart, update its quantity
                 // console.log(cart.products[existingProductIndex].quantity);
                 cart.products[existingProductIndex].quantity += +quantity;
+                cart.products[existingProductIndex].totalPrice = price * cart.products[existingProductIndex].quantity;
             } else {
                 // If the product doesn't exist, add it to the products array
-                cart.products.push({ productId, quantity });
+                cart.products.push({ productId, quantity, totalPrice:price*quantity });
             }
         }
+
+        // Calculate the grand total
+        cart.grandTotal = cart.products.reduce((total, product) => total + product.totalPrice, 0);
         
         const saveCart = await cart.save();
         res.status(200).json({ message: 'Product added to cart successfully!', saveCart });

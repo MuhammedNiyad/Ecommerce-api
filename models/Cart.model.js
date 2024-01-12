@@ -15,10 +15,16 @@ const cartSchema = new mongoose.Schema({
             quantity: {
                 type:Number,
                 default: 1
+            },
+            totalPrice: {
+                type:Number
             }
-
         }
     ],
+    grandTotal: {
+        type:Number,
+        default: 0
+    }
     
 }, {timestamps: true});
 
