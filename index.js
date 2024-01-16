@@ -9,7 +9,7 @@ dotenv.config();
 // app.use(cors());
 app.use(cors(
     {
-        origin: ["https://ecommerce-frontend-bookstore.vercel.app/"],
+        origin: ["https://ecommerce-frontend-bookstore.vercel.app"],
         methods: ["POST","GET","PUT","DELETE"],
         credentials: true
     }
