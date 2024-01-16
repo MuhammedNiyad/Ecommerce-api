@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 
 
 dotenv.config();
-app.use(cors());
+// app.use(cors());
 app.use(cors(
     {
         origin: ["http://deploy-mern-1whq.vercel.app"],
